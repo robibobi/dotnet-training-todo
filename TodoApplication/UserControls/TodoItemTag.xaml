@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="TodoApplication.UserControls.TodoItemTag"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:TodoApplication.UserControls"
+             mc:Ignorable="d"
+             x:Name="Root">
+
+    <Border Background="DarkBlue"
+            Height="32"
+            Margin="8"
+            CornerRadius="12">
+        <TextBlock x:Name="TagTextBlock"
+                   Foreground="White"
+                   Margin="8" />
+    </Border>
+
+</UserControl>

@@ -1,0 +1,146 @@
+﻿<Window x:Class="TodoApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TodoApplication"
+        xmlns:vm="clr-namespace:TodoApplication.ViewModels"
+        xmlns:usercontrols="clr-namespace:TodoApplication.UserControls"
+        xmlns:customcontrols="clr-namespace:TodoApplication.CustomControls"
+        mc:Ignorable="d"
+        Title="HMI Todo Management"
+        Height="450"
+        Width="900">
+
+    <Grid>
+        <StackPanel Margin="32">
+
+            <!--  Header  -->
+            <TextBlock FontSize="22"
+                       Margin="0,0,0,16"
+                       Text="{Binding Title}" />
+
+            <!--  TextBox + Add Button  -->
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,0,0,16">
+
+                <TextBox x:Name="TodoNameTextBox"
+                         Width="200"
+                         VerticalAlignment="Center"
+                         Text="{Binding TodoName,
+                                        UpdateSourceTrigger=PropertyChanged}" />
+
+                <Button x:Name="AddTodoButton"
+                        Margin="16,0,0,0"
+                        Command="{Binding AddTodoCommand}"
+                        Style="{StaticResource MaterialDesignButton}"
+                        VerticalAlignment="Center"
+                        Content="Add Todo Item" />
+
+                <ComboBox Width="180"
+                          Margin="64,0,16,0"
+                          VerticalAlignment="Center"
+                          ItemsSource="{Binding AvailableTags}"
+                          SelectedItem="{Binding SelectedTag,
+                                                 Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="vm:TodoItemTagViewModel">
+                            <customcontrols:TodoItemTag TagText="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Button x:Name="AddTagButton"
+                        Style="{StaticResource MaterialDesignButton}"
+                        Command="{Binding AddTagCommand}"
+                        Content="Add Tag" />
+
+                <Button x:Name="ManageTagButton"
+                        Margin="18,0,0,0"
+                        Command="{Binding ShowManageTagsDialogCommand}"
+                        Style="{StaticResource MaterialDesignButton}"
+                        Content="Manage Tags" />
+
+            </StackPanel>
+
+            <!--  Todo-List  -->
+            <ListBox Height="280"
+                     x:Name="TodoListBox"
+                     SelectedItem="{Binding SelectedTodoItem,
+                                            Mode=TwoWay}"
+                     Background="{StaticResource TodoListBackground}"
+                     ItemsSource="{Binding TodoItems}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="vm:TodoItemViewModel">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <!--  IsDone  -->
+                                <ColumnDefinition Width="auto" />
+                                <!--  Name  -->
+                                <ColumnDefinition Width="200" />
+                                <!--  Timestamp  -->
+                                <ColumnDefinition />
+                                <!--  Tags  -->
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <CheckBox Grid.Column="0"
+                                      VerticalAlignment="Center"
+                                      IsChecked="{Binding IsDone,
+                                                          Mode=TwoWay}" />
+
+                            <TextBlock Margin="16"
+                                       Grid.Column="1"
+                                       Text="{Binding Name,
+                                                      StringFormat={}{0} ms}" />
+                            <TextBlock Margin="16"
+                                       Grid.Column="2"
+                                       Text="{Binding TimeStamp,
+                                                      Converter={StaticResource DateTimeToStringConverter},
+                                                      ConverterParameter=HH:mm:ss}" />
+
+                            <Rectangle Height="1"
+                                       Grid.Column="1"
+                                       Grid.ColumnSpan="3"
+                                       Visibility="{Binding IsDone,
+                                                            Converter={StaticResource BoolToVisibilityConverter}}"
+                                       Fill="Black" />
+
+                            <Button Content="Delete"
+                                    Grid.Column="3"
+                                    CommandParameter="{Binding Path=.}"
+                                    Command="{Binding DataContext.RemoveTodoCommand,
+                                                      RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                                     AncestorType=ItemsControl}}" />
+                            <!--  Tag List  -->
+                            <ItemsControl Grid.Column="4"
+                                          Margin="16,0,0,0"
+                                          ItemsSource="{Binding Tags}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <customcontrols:TodoItemTag RemoveTagCommand="{Binding DataContext.RemoveTagCommand,
+                                                                                               RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                                                                              AncestorType=ItemsControl}}"
+                                                                    RemoveTagCommandParameter="{Binding}"
+                                                                    TagText="{Binding Name}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+
+
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+        </StackPanel>
+        <ContentControl x:Name="DialogHost" />
+    </Grid>
+</Window>

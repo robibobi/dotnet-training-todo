@@ -1,0 +1,51 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:TodoApplication.Converters"
+                    xmlns:customcontrols="clr-namespace:TodoApplication.CustomControls">
+
+    <converters:NullToVisibilityCollapsedConverter x:Key="NullToVisibilityCollapsedConverter" />
+
+    <Style TargetType="customcontrols:TodoItemTag">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="customcontrols:TodoItemTag">
+
+                    <Border Background="DarkBlue"
+                            Height="32"
+                            Margin="8"
+                            CornerRadius="12">
+                        <StackPanel Orientation="Horizontal">
+                            
+                            <TextBlock x:Name="CustomTagTextBlock"
+                                       Text="{TemplateBinding TagText}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Margin="8" />
+
+                            <Button Command="{TemplateBinding RemoveTagCommand}"
+                                    CommandParameter="{TemplateBinding RemoveTagCommandParameter}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    Visibility="{TemplateBinding RemoveTagCommand, Converter={StaticResource NullToVisibilityCollapsedConverter}}"
+                                    Content="X">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Padding="6"
+                                                Margin="0, 0, 4, 0" >
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                       Text="X" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                        </StackPanel>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
