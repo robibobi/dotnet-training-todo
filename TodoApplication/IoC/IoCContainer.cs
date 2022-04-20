@@ -11,6 +11,7 @@ namespace TodoApplication.IoC
 
         static IoCContainer()
         {
+
             var builder = new ContainerBuilder();
 
             // Repossitories
