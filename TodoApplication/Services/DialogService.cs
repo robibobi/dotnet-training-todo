@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using TodoApplication.Dialogs;
 using TodoApplication.Respositories;
@@ -40,6 +37,7 @@ namespace TodoApplication.Services
         private static void SetDialogHostContent(object content)
         {
             var mainWindow = Application.Current.MainWindow as MainWindow;
+
             mainWindow.DialogHost.Content = content;
         }
     }
