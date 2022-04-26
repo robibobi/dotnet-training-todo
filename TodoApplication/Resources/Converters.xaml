@@ -10,4 +10,6 @@
 
     <converters:NullToVisibilityCollapsedConverter x:Key="NullToVisibilityCollapsedConverter" />
 
+    <converters:TagColorConverter x:Key="TagColorConverter" />
+
 </ResourceDictionary>

@@ -45,7 +45,9 @@
                                                  Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate DataType="vm:TodoItemTagViewModel">
-                            <customcontrols:TodoItemTag TagText="{Binding Name}" />
+                            <customcontrols:TodoItemTag
+                                Background="{Binding Color, Converter={StaticResource TagColorConverter}}"
+                                TagText="{Binding Name}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -127,6 +129,7 @@
                                         <customcontrols:TodoItemTag RemoveTagCommand="{Binding DataContext.RemoveTagCommand,
                                                                                                RelativeSource={RelativeSource Mode=FindAncestor,
                                                                                                                               AncestorType=ItemsControl}}"
+                                                                    Background="{Binding Color, Converter={StaticResource TagColorConverter}}"
                                                                     RemoveTagCommandParameter="{Binding}"
                                                                     TagText="{Binding Name}" />
                                     </DataTemplate>

@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace TodoApplication.Models
 {
-    internal class TodoItemTag
+    internal enum TagColor
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public TagColor Color { get; set; }
+        Default,
+        Color1,
+        Color2,
+        Color3,
+        Color4
     }
 }

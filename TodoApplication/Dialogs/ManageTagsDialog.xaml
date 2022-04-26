@@ -10,7 +10,8 @@
              Width="600">
     <Border>
         <Border.Effect>
-            <DropShadowEffect Color="Gray" ShadowDepth="2" />
+            <DropShadowEffect Color="Gray"
+                              ShadowDepth="2" />
         </Border.Effect>
         <Grid Background="White">
             <Grid.RowDefinitions>
@@ -30,23 +31,25 @@
             <!--  Content  -->
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <!-- TextBox and Buttons -->
+                    <!--  TextBox and Buttons  -->
                     <RowDefinition Height="auto" />
-                    <!-- Taglist -->
+                    <!--  Taglist  -->
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid Margin="16, 16, 16, 0">
+                <Grid Margin="16,16,16,0">
                     <Grid.ColumnDefinitions>
-                        <!-- TextBox -->
+                        <!--  TextBox  -->
                         <ColumnDefinition Width="2*" />
-                        <!-- Add Button -->
+                        <!--  Add Button  -->
                         <ColumnDefinition />
-                        <!-- Remove Button -->
+                        <!--  Remove Button  -->
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" 
-                             Text="{Binding TagName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Column="0"
+                             Text="{Binding TagName,
+                                            Mode=TwoWay,
+                                            UpdateSourceTrigger=PropertyChanged}" />
                     <Button Grid.Column="1"
                             Content="Add Tag"
                             Command="{Binding AddTagCommand}" />
@@ -59,39 +62,55 @@
                 <ListBox Grid.Row="1"
                          Margin="16"
                          ItemsSource="{Binding Tags}"
-                         SelectedItem="{Binding SelectedTag, Mode=TwoWay}">
+                         SelectedItem="{Binding SelectedTag,
+                                                Mode=TwoWay}">
 
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                         </Style>
                     </ListBox.ItemContainerStyle>
-                    
+
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Name}"
-                                     Margin="32, 0, 0, 0"
-                                     HorizontalAlignment="Left"
-                                     Width="200" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <!--  Name  -->
+                                    <ColumnDefinition />
+                                    <!--  Color  -->
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Text="{Binding Name}"
+                                         Margin="32,0,0,0"
+                                         Background="{Binding Color, Mode=OneWay, Converter={StaticResource TagColorConverter}}"
+                                         HorizontalAlignment="Left"
+                                         Width="200" />
+                               
+                                <ComboBox Grid.Column="1"
+                                          SelectedItem="{Binding Color, Mode=TwoWay}"
+                                          ItemsSource="{Binding DataContext.AvailableColors, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
+
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
 
 
             </Grid>
-            
-            
-            <!-- Buttons -->
+
+
+            <!--  Buttons  -->
             <StackPanel Grid.Row="2"
-                        HorizontalAlignment="Right" >
+                        HorizontalAlignment="Right">
                 <Button x:Name="CloseDialogButton"
                         Content="Close"
                         Click="CloseDialogButton_Click"
                         Margin="8"
                         Width="120" />
             </StackPanel>
-            
-            
+
+
         </Grid>
     </Border>
 </UserControl>

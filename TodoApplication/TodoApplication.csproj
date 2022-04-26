@@ -88,12 +88,14 @@
     <Compile Include="Converters\DateTimeToStringConverter.cs" />
     <Compile Include="Converters\NullToVisibilityCollapsedConverter.cs" />
     <Compile Include="Converters\StringToUpperConverter.cs" />
+    <Compile Include="Converters\TagColorConverter.cs" />
     <Compile Include="CustomControls\TodoItemTag.cs" />
     <Compile Include="Dialogs\ManageTagsDialog.xaml.cs">
       <DependentUpon>ManageTagsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\MissingTemplatePartException.cs" />
     <Compile Include="IoC\IoCContainer.cs" />
+    <Compile Include="Models\TagColor.cs" />
     <Compile Include="Models\TodoItem.cs" />
     <Compile Include="Models\TodoItemTag.cs" />
     <Compile Include="Respositories\ITagRepository.cs" />
