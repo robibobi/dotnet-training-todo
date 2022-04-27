@@ -83,13 +83,24 @@
 
                                 <TextBox Text="{Binding Name}"
                                          Margin="32,0,0,0"
-                                         Background="{Binding Color, Mode=OneWay, Converter={StaticResource TagColorConverter}}"
                                          HorizontalAlignment="Left"
                                          Width="200" />
-                               
+
                                 <ComboBox Grid.Column="1"
-                                          SelectedItem="{Binding Color, Mode=TwoWay}"
-                                          ItemsSource="{Binding DataContext.AvailableColors, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
+                                          SelectedItem="{Binding Color,
+                                                                 Mode=TwoWay}"
+                                          ItemsSource="{Binding DataContext.AvailableColors,
+                                                                RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                                               AncestorType=ListBox}}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Rectangle Width="120"
+                                                       Height="20"
+                                                       Fill="{Binding .,
+                                                                      Converter={StaticResource TagColorConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
                             </Grid>
                         </DataTemplate>

@@ -3,15 +3,28 @@
 
 
     <SolidColorBrush x:Key="ButtonMainBrush"
-                     Color="#6002EE" />
+                     Color="#FFA000" />
     <SolidColorBrush x:Key="ButtonMouseOverBrush"
-                     Color="#7E3FF2" />
+                     Color="#FFD740" />
     <SolidColorBrush x:Key="ButtonPressedBrush"
-                     Color="#D4BFF9" />
+                     Color="#FFD54F" />
     <SolidColorBrush x:Key="ButtonDisabledBrush"
                      Color="#908F93" />
 
     <SolidColorBrush x:Key="TodoListBackground"
-                     Color="Orange" />
+                     Color="#ffddb0" />
+    
+    
+    <!-- Tag Colors -->
+    <SolidColorBrush x:Key="TagColorDefault"
+                     Color="Gray" />
+    <SolidColorBrush x:Key="TagColor1"
+                     Color="#e54304" />
+    <SolidColorBrush x:Key="TagColor2"
+                     Color="#fa8100" />
+    <SolidColorBrush x:Key="TagColor3"
+                     Color="#ffaf49" />
+    <SolidColorBrush x:Key="TagColor4"
+                     Color="#FFC400" />
 
 </ResourceDictionary>
