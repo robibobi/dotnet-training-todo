@@ -11,7 +11,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="customcontrols:TodoItemTag">
 
-                    <Border Background="DarkBlue"
+                    <Border Background="{TemplateBinding Background}"
                             Height="32"
                             Margin="8"
                             CornerRadius="12">

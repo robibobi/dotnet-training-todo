@@ -38,6 +38,8 @@ namespace TodoApplication.ViewModels.Dialogs
 
         public ObservableCollection<TagViewModel> Tags { get; }
 
+        public ObservableCollection<TagColor> AvailableColors { get; }
+
         public ActionCommand AddTagCommand { get; }
         public ActionCommand RemoveTagCommand { get; }
 
@@ -52,6 +54,15 @@ namespace TodoApplication.ViewModels.Dialogs
             _tagRepository = tagRepository;
             AddTagCommand = new ActionCommand(AddTag, CanAddTag);
             RemoveTagCommand = new ActionCommand(RemoveTag, CanRemoveTag);
+
+            AvailableColors = new ObservableCollection<TagColor>
+            {
+                TagColor.Default,
+                TagColor.Color1,
+                TagColor.Color2,
+                TagColor.Color3,
+                TagColor.Color4
+            };
         }
 
         private bool CanRemoveTag()

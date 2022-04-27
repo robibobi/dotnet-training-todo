@@ -55,7 +55,7 @@ namespace TodoApplication.Respositories
             var tags = GetAll();
             var tagToUpdate = tags.Single(t => t.Id == tag.Id);
             tagToUpdate.Name = tag.Name;
-
+            tagToUpdate.Color = tag.Color;
             SaveItems(tags);
         }
 

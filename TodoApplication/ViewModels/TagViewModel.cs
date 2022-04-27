@@ -7,10 +7,11 @@ namespace TodoApplication.ViewModels
     internal class TagViewModel
     {
         private readonly ITagRepository _tagRepository;
+        
+        private string _name;
+        private TagColor _color;
 
         public Guid Id { get; }
-
-        private string _name;
 
         public string Name
         {
@@ -23,11 +24,22 @@ namespace TodoApplication.ViewModels
         }
 
 
+        public TagColor Color
+        {
+            get { return _color; }
+            set 
+            { 
+                _color = value;
+                _tagRepository.Update(CreateModel());
+            }
+        }
+
         public TagViewModel(TodoItemTag tag,
             ITagRepository tagRepository)
         {
             Id = tag.Id;
             _name = tag.Name;
+            _color = tag.Color;
             _tagRepository = tagRepository;
         }
 
@@ -37,6 +49,7 @@ namespace TodoApplication.ViewModels
             {
                 Id = Id,
                 Name = Name,
+                Color = Color,
             };
         }
     }
