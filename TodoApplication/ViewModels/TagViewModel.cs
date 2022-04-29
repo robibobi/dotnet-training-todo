@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Linq;
 using TodoApplication.Models;
 using TodoApplication.Respositories;
 
 namespace TodoApplication.ViewModels
 {
-    internal class TagViewModel
+    internal class TagViewModel : ValidationViewModelBase
     {
         private readonly ITagRepository _tagRepository;
         
@@ -19,10 +21,42 @@ namespace TodoApplication.ViewModels
             set 
             { 
                 _name = value;
-                _tagRepository.Update(CreateModel());
+                if (ValidateName())
+                {
+                    _tagRepository.Update(CreateModel());
+                }
             }
         }
 
+        private bool ValidateName()
+        {
+            // Validate that name is not empty
+            if (String.IsNullOrWhiteSpace(Name))
+            {
+                SetError(nameof(Name), "Tag cannot be empty!");
+                return false;
+            }
+            // Validate that name is unique
+            else if(NameIsNotUnique())
+            {
+                SetError(nameof(Name), "Tag name must be unique!");
+                return false;
+            } else
+            {
+                ResetError(nameof(Name));
+                return true;
+            }
+        }
+
+        private bool NameIsNotUnique()
+        {
+            var otherTagNames = _tagRepository
+                .GetAll()
+                .Where(tag => tag.Id != this.Id)
+                .Select(tag => tag.Name);
+
+            return otherTagNames.Contains(Name);
+        }
 
         public TagColor Color
         {

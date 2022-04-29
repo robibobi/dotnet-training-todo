@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TodoApplication.Dialogs"
+             xmlns:rules="clr-namespace:TodoApplication.Validation.Rules"
              mc:Ignorable="d"
              FontSize="16"
              Height="350"
@@ -76,15 +76,44 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <!--  Name  -->
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="*" />
                                     <!--  Color  -->
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox Text="{Binding Name}"
-                                         Margin="32,0,0,0"
-                                         HorizontalAlignment="Left"
-                                         Width="200" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBox x:Name="TagNameTextBox"
+                                             Text="{Binding Name,
+                                                            ValidatesOnDataErrors=True,
+                                                            UpdateSourceTrigger=PropertyChanged}"
+                                             Grid.Row="0"
+                                             HorizontalAlignment="Left"
+                                             Width="200">
+                                        <!-- This was the code for the Validation Rules session: -->
+                                        <!--<TextBox.Text>
+                                            <Binding Path="Name"
+                                                     UpdateSourceTrigger="PropertyChanged">
+                                                <Binding.ValidationRules>
+                                                    <rules:NotEmptyValidationRule ErrorMessageWhenEmpty="Tag name cannot be empty." />
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>-->
+                                    </TextBox>
+                                    <TextBlock x:Name="ValidationErrorTextBlock"
+                                               Grid.Row="1"
+                                               HorizontalAlignment="Left"
+                                               TextWrapping="Wrap"
+                                               Foreground="Red"
+                                               Visibility="{Binding ElementName=TagNameTextBox,
+                                                                    Path=(Validation.HasError),
+                                                                    Converter={StaticResource BoolToVisibilityConverter}}"
+                                               Text="{Binding ElementName=TagNameTextBox,
+                                                              Path=(Validation.Errors)/ErrorContent}" />
+                                </Grid>
 
                                 <ComboBox Grid.Column="1"
                                           SelectedItem="{Binding Color,
