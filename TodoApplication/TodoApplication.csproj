@@ -98,6 +98,11 @@
     <Compile Include="Models\TagColor.cs" />
     <Compile Include="Models\TodoItem.cs" />
     <Compile Include="Models\TodoItemTag.cs" />
+    <Compile Include="Properties\Resources.de-DE.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.de-DE.resx</DependentUpon>
+    </Compile>
     <Compile Include="Respositories\ITagRepository.cs" />
     <Compile Include="Respositories\ITodoItemRepository.cs" />
     <Compile Include="Respositories\TagRepository.cs" />
@@ -168,8 +173,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.de-DE.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.de-DE.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

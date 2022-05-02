@@ -26,8 +26,6 @@ namespace TodoApplication.ViewModels
         private TagViewModel _selectedTag;
         private TodoItemViewModel _selectedTodoItem;
 
-        public string Title { get; } 
-
         public string TodoName
         {
             get { return _todoName; }
@@ -79,7 +77,6 @@ namespace TodoApplication.ViewModels
             _tagRepository = tagRespository;
             _dialogService = dialogService;
 
-            Title = "Todo Application (Title from vm)";
             AddTodoCommand = new ActionCommand(AddTodo, CanAddTodo);
             RemoveTodoCommand = new ActionCommand<TodoItemViewModel>(RemoveTodo, CanRemoveTodo);
             ShowManageTagsDialogCommand = new ActionCommand(ShowManageTagsDialog, () => true );

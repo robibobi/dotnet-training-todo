@@ -121,9 +121,9 @@
     <value>Todo Application</value>
   </data>
   <data name="TagEmptyError" xml:space="preserve">
-    <value>Tag cannot be empty!</value>
+    <value>Tag darf nicht leer sein.</value>
   </data>
   <data name="TagNotUniqueError" xml:space="preserve">
-    <value>Tag name must be unique!</value>
+    <value>Tag muss eindeutig sein.</value>
   </data>
 </root>

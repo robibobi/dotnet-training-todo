@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using TodoApplication.Models;
+using TodoApplication.Properties;
 using TodoApplication.Respositories;
 
 namespace TodoApplication.ViewModels
@@ -33,13 +34,13 @@ namespace TodoApplication.ViewModels
             // Validate that name is not empty
             if (String.IsNullOrWhiteSpace(Name))
             {
-                SetError(nameof(Name), "Tag cannot be empty!");
+                SetError(nameof(Name), Resources.TagEmptyError);
                 return false;
             }
             // Validate that name is unique
             else if(NameIsNotUnique())
             {
-                SetError(nameof(Name), "Tag name must be unique!");
+                SetError(nameof(Name), Resources.TagNotUniqueError);
                 return false;
             } else
             {

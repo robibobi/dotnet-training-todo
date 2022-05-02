@@ -7,6 +7,7 @@
         xmlns:vm="clr-namespace:TodoApplication.ViewModels"
         xmlns:usercontrols="clr-namespace:TodoApplication.UserControls"
         xmlns:customcontrols="clr-namespace:TodoApplication.CustomControls"
+        xmlns:p="clr-namespace:TodoApplication.Properties"
         mc:Ignorable="d"
         Title="HMI Todo Management"
         Height="450"
@@ -18,7 +19,7 @@
             <!--  Header  -->
             <TextBlock FontSize="22"
                        Margin="0,0,0,16"
-                       Text="{Binding Title}" />
+                       Text="{x:Static p:Resources.AppTitle}" />
 
             <!--  TextBox + Add Button  -->
             <StackPanel Orientation="Horizontal"
