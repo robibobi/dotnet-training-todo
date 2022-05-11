@@ -83,6 +83,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AttachedProperties\ExampleProperties.cs" />
+    <Compile Include="Behaviors\ScrollViewerHelper.cs" />
     <Compile Include="Commands\ActionCommand.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeToStringConverter.cs" />
@@ -95,6 +97,9 @@
     </Compile>
     <Compile Include="Exceptions\MissingTemplatePartException.cs" />
     <Compile Include="IoC\IoCContainer.cs" />
+    <Compile Include="MarkupExtensions\PlaceholderTextExtension.cs" />
+    <Compile Include="MarkupExtensions\TagColorConverterExtension.cs" />
+    <Compile Include="MarkupExtensions\ViewModelProviderExtension.cs" />
     <Compile Include="Models\TagColor.cs" />
     <Compile Include="Models\TodoItem.cs" />
     <Compile Include="Models\TodoItemTag.cs" />
@@ -177,7 +182,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.de-DE.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.de-DE.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows;
 
 namespace TodoApplication.ViewModels
 {
@@ -9,6 +10,12 @@ namespace TodoApplication.ViewModels
         protected void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public static bool IsRunningInDesigner()
+        {
+            return (bool)(DesignerProperties.IsInDesignModeProperty
+                .GetMetadata(typeof(DependencyObject)).DefaultValue);
         }
     }
 }

@@ -7,11 +7,22 @@
         xmlns:vm="clr-namespace:TodoApplication.ViewModels"
         xmlns:usercontrols="clr-namespace:TodoApplication.UserControls"
         xmlns:customcontrols="clr-namespace:TodoApplication.CustomControls"
+        xmlns:properties="clr-namespace:TodoApplication.AttachedProperties"
+        xmlns:me="clr-namespace:TodoApplication.MarkupExtensions"
+        xmlns:b="clr-namespace:TodoApplication.Behaviors"
         xmlns:p="clr-namespace:TodoApplication.Properties"
         mc:Ignorable="d"
         Title="HMI Todo Management"
-        Height="450"
-        Width="900">
+        Height="500"
+        Width="900"
+        DataContext="{me:ViewModelProvider ViewModelType={x:Type vm:MainWindowViewModel}}" >
+
+    <Window.Resources>
+        <Style x:Key="TagNameTextBoxStyle"
+               TargetType="TextBox">
+            <Setter Property="Text" Value="ABC" />
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <StackPanel Margin="32">
@@ -26,12 +37,14 @@
                         Margin="0,0,0,16">
 
                 <TextBox x:Name="TodoNameTextBox"
+                         Style="{StaticResource TagNameTextBoxStyle}"
                          Width="200"
                          VerticalAlignment="Center"
                          Text="{Binding TodoName,
                                         UpdateSourceTrigger=PropertyChanged}" />
 
                 <Button x:Name="AddTodoButton"
+                        properties:ExampleProperties.SetBackgroundColorWhenEmpty="True"
                         Margin="16,0,0,0"
                         Command="{Binding AddTodoCommand}"
                         Style="{StaticResource MaterialDesignButton}"
@@ -46,9 +59,9 @@
                                                  Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate DataType="vm:TodoItemTagViewModel">
-                            <customcontrols:TodoItemTag
-                                Background="{Binding Color, Converter={StaticResource TagColorConverter}}"
-                                TagText="{Binding Name}" />
+                            <customcontrols:TodoItemTag Background="{Binding Color,
+                                                                             Converter={me:TagColorConverter}}"
+                                                        TagText="{Binding Name}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -67,8 +80,12 @@
             </StackPanel>
 
             <!--  Todo-List  -->
-            <ListBox Height="280"
+            <!--<ScrollViewer Height="270"
+                          b:ScrollViewerHelper.AutoScroll="True"
+                          HorizontalScrollBarVisibility="Disabled" >-->
+            <ListBox Height="270"
                      x:Name="TodoListBox"
+                     b:ScrollViewerHelper.AutoScroll="True"
                      SelectedItem="{Binding SelectedTodoItem,
                                             Mode=TwoWay}"
                      Background="{StaticResource TodoListBackground}"
@@ -130,7 +147,8 @@
                                         <customcontrols:TodoItemTag RemoveTagCommand="{Binding DataContext.RemoveTagCommand,
                                                                                                RelativeSource={RelativeSource Mode=FindAncestor,
                                                                                                                               AncestorType=ItemsControl}}"
-                                                                    Background="{Binding Color, Converter={StaticResource TagColorConverter}}"
+                                                                    Background="{Binding Color,
+                                                                                         Converter={StaticResource TagColorConverter}}"
                                                                     RemoveTagCommandParameter="{Binding}"
                                                                     TagText="{Binding Name}" />
                                     </DataTemplate>
@@ -143,6 +161,10 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
+            <TextBlock Text="{me:PlaceholderText TextLength=20}"/>
+
+            <!--</ScrollViewer>-->
 
         </StackPanel>
         <ContentControl x:Name="DialogHost" />
