@@ -31,7 +31,7 @@ namespace TodoApplication.Behaviors
         private static void OnScrollChanged(object sender, ScrollChangedEventArgs args)
         {
             var sv = sender as ScrollViewer;
-            if (args.ViewportHeightChange > 0d)
+            if (args.ExtentHeightChange > 0d)
             {
                 sv.ScrollToBottom();
             }

@@ -1,0 +1,21 @@
+[
+  {
+    "Id": "6cd21072-1260-45d3-a4ec-60859de7a12b",
+    "Name": "Item 1",
+    "TimeStamp": "2022-04-13T10:46:09.9668242+02:00",
+    "IsDone": false,
+    "TagIds": [
+      "fc78081d-dfb3-40e0-a50b-a34f96231361"
+    ]
+  },
+  {
+    "Id": "1946f772-fbe4-4ce4-99c5-afc09d23e296",
+    "Name": "Item 2",
+    "TimeStamp": "2022-04-20T11:02:14.4128488+02:00",
+    "IsDone": false,
+    "TagIds": [
+      "cd2f8802-20d5-4bb9-9f2d-670b56589ac4",
+      "662dab56-9f47-4081-a84a-53669cc454b7"
+    ]
+  }
+]

@@ -29,6 +29,10 @@ namespace TodoApplication.IoC
             builder.RegisterType<LoggingService>()
                 .As<ILoggingService>();
 
+            builder.RegisterType<AppConfigService>()
+                .As<IAppConfigService>()
+                .SingleInstance();
+
             // ViewModels
             builder.RegisterType<MainWindowViewModel>();
 

@@ -6,26 +6,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TodoApplication.Models;
+using TodoApplication.Services;
 
 namespace TodoApplication.Respositories
 {
     internal class TodoItemRespository : ITodoItemRepository
     {
-        const string TodoFileName = "todoItems.json";
+        private readonly IAppConfigService _configService;
 
-
-        public TodoItemRespository()
+        public TodoItemRespository(IAppConfigService configService)
         {
-
+            _configService = configService;
         }
 
         public List<TodoItem> GetAll()
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            path = Path.Combine(path, "TodoApplication", TodoFileName);
-            if (File.Exists(path))
+            if (_configService.TodoItemFile.Exists)
             {
-                var todoItemsString = File.ReadAllText(path);
+                var todoItemsString = File.ReadAllText(_configService.TodoItemFile.FullName);
                 return JsonConvert
                     .DeserializeObject<List<TodoItem>>(todoItemsString);
             }
@@ -70,20 +68,17 @@ namespace TodoApplication.Respositories
 
         private void SaveItems(List<TodoItem> items)
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-            path = Path.Combine(path, "TodoApplication");
-            if (!Directory.Exists(path))
+            var todoItemsFile = _configService.TodoItemFile;
+            
+            if (!todoItemsFile.Directory.Exists)
             {
-                Directory.CreateDirectory(path);
+                todoItemsFile.Directory.Create();
             }
-
-            path = Path.Combine(path, TodoFileName);
 
             string todoItemsString = JsonConvert
                 .SerializeObject(items, Formatting.Indented);
 
-            File.WriteAllText(path, todoItemsString);
+            File.WriteAllText(todoItemsFile.FullName, todoItemsString);
         }
     }
 }
