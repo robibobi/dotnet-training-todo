@@ -3,19 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TodoApplication.Models;
+using TodoApplication.Services;
 
 namespace TodoApplication.Respositories
 {
     internal class TagRepository : ITagRepository
     {
-        const string TagFileName = "tags.json";
+        private readonly IAppConfigService _configService;
 
-        public TagRepository()
+        public TagRepository(IAppConfigService configService)
         {
-
+            _configService = configService;
         }
 
         public void Add(TodoItemTag tag)
@@ -27,11 +26,10 @@ namespace TodoApplication.Respositories
 
         public List<TodoItemTag> GetAll()
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            path = Path.Combine(path, "TodoApplication", TagFileName);
-            if (File.Exists(path))
+            var tagFile = _configService.TagItemFile;
+            if (tagFile.Exists)
             {
-                var tagItemsString = File.ReadAllText(path);
+                var tagItemsString = File.ReadAllText(tagFile.FullName);
                 return JsonConvert
                     .DeserializeObject<List<TodoItemTag>>(tagItemsString);
             }
@@ -61,19 +59,16 @@ namespace TodoApplication.Respositories
 
         private void SaveItems(List<TodoItemTag> items)
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            path = Path.Combine(path, "TodoApplication");
-            if (!Directory.Exists(path))
+            var tagFile = _configService.TagItemFile;
+            if (!tagFile.Directory.Exists)
             {
-                Directory.CreateDirectory(path);
+                tagFile.Directory.Create();
             }
 
-            path = Path.Combine(path, TagFileName);
-
-            string tagItemsString = JsonConvert
+            var tagItemsString = JsonConvert
                 .SerializeObject(items, Formatting.Indented);
 
-            File.WriteAllText(path, tagItemsString);
+            File.WriteAllText(tagFile.FullName, tagItemsString);
         }
     }
 }

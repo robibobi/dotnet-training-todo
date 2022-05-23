@@ -1,0 +1,17 @@
+[
+  {
+    "Id": "fc78081d-dfb3-40e0-a50b-a34f96231361",
+    "Name": "Tag 1",
+    "Color": 2
+  },
+  {
+    "Id": "cd2f8802-20d5-4bb9-9f2d-670b56589ac4",
+    "Name": "Tag 2",
+    "Color": 1
+  },
+  {
+    "Id": "662dab56-9f47-4081-a84a-53669cc454b7",
+    "Name": "Another Tag",
+    "Color": 1
+  }
+]

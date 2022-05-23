@@ -137,7 +137,7 @@ namespace TodoApplication.UnitTest.ViewModels.Dialogs
             IEnumerable<Guid> referencedIds = null,
             ITagRepository tagRepo = null)
         {
-            tagRepo = tagRepo ?? new TagRepository();
+            tagRepo = tagRepo ?? Mock.Of<ITagRepository>();
             referencedIds = referencedIds ?? Enumerable.Empty<Guid>();
             return new ManageTagsDialogViewModel(
                 new ObservableCollection<TagViewModel>(),

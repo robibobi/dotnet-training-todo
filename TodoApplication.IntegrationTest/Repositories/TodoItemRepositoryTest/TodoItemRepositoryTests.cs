@@ -12,16 +12,18 @@ namespace TodoApplication.IntegrationTest.Repositories.TodoItemRespositoryTest
 {
 
     [TestClass]
-    public class TodoItemRepositoryTests
+    public class TodoItemRepositoryTests : IntegrationTestBase
     {
-        private readonly string _testDir = Path.Combine(Path.GetTempPath(), "TodoItemRepositoryTests");
+        public TodoItemRepositoryTests() :
+            base("Repositories", "TodoItemRepositoryTest", "Data")
+        {
+        }
 
         [TestMethod]
         public void GetAll_FileContainsTwoItems_ReturnsListWithTwoItems()
         {
             // Arrange
-            RecreateDirectory(_testDir);
-            var todoItemTestFile = CopyFileToTestDir(_testDir, "GetAllTestFile.json");
+            var todoItemTestFile = CopyFileToTestDir("GetAllTestFile.json");
             var repository = CreateSut(todoItemTestFile);
             // Act
             var todos = repository.GetAll();
@@ -33,8 +35,7 @@ namespace TodoApplication.IntegrationTest.Repositories.TodoItemRespositoryTest
         public void Add_FileIsEmpty_ItemIsAddedToTheFile()
         {
             // Arrange
-            RecreateDirectory(_testDir);
-            var todoItemTestFile = CopyFileToTestDir(_testDir, "EmptyTestFile.json");
+            var todoItemTestFile = CopyFileToTestDir("EmptyTestFile.json");
             var repository = CreateSut(todoItemTestFile);
             // Act
             repository.Add(CreateTodoItem("Create integration tests"));
@@ -47,8 +48,7 @@ namespace TodoApplication.IntegrationTest.Repositories.TodoItemRespositoryTest
         public void Remove_FileHas2TodoItems_FirstItemIsRemovedFromFile()
         {
             // Arrange
-            RecreateDirectory(_testDir);
-            var testFile = CopyFileToTestDir(_testDir, "GetAllTestFile.json");
+            var testFile = CopyFileToTestDir("GetAllTestFile.json");
             var repository = CreateSut(testFile);
             // Act
             repository.Remove(Guid.Parse("6cd21072-1260-45d3-a4ec-60859de7a12b"));
@@ -58,30 +58,6 @@ namespace TodoApplication.IntegrationTest.Repositories.TodoItemRespositoryTest
         }
 
 
-        [TestCleanup]
-        public void CleanUp()
-        {
-            // Cleanup
-            Directory.Delete(_testDir, true);
-        }
-
-
-        private FileInfo CopyFileToTestDir(string testDirPath, string fileName)
-        {
-            var sourceFileName = Path.Combine(Environment.CurrentDirectory, "Repositories", "TodoItemRepositoryTest", "Data", fileName);
-            var targetFileName = Path.Combine(testDirPath, fileName);
-            File.Copy(sourceFileName, targetFileName, true);
-            return new FileInfo(targetFileName);
-        }
-
-        private void RecreateDirectory(string directory)
-        {
-            if (Directory.Exists(directory))
-            {
-                Directory.Delete(directory, true);
-            }
-            Directory.CreateDirectory(directory);
-        }
 
         private IAppConfigService CreateFakeConfigService(FileInfo todoItemFile)
         {

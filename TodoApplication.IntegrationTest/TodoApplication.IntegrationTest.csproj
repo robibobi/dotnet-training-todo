@@ -90,12 +90,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntegrationTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\TagItemRepositoryTest\TagRepositoryTests.cs" />
     <Compile Include="Repositories\TodoItemRepositoryTest\TodoItemRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Repositories\TagItemRepositoryTest\Data\GetAllTestFile.json" />
     <None Include="Repositories\TodoItemRepositoryTest\Data\EmptyTestFile.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
