@@ -52,7 +52,7 @@ namespace TodoApplication.UnitTest.ViewModels
                 CreateTag("I already exist"),
             };
             var tagRepositoryMock = new Mock<ITagRepository>();
-            tagRepositoryMock.Setup(repo => repo.GetAll()).Returns(existingTags);
+            tagRepositoryMock.Setup(repo => repo.GetAll()).Returns(Task.FromResult(existingTags));
 
             var tagVm = CreateSut(CreateTag("Some name"), tagRepositoryMock.Object);
             // Act

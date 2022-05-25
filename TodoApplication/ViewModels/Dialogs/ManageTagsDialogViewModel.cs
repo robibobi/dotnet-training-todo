@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using TodoApplication.Commands;
 using TodoApplication.Models;
 using TodoApplication.Respositories;
@@ -40,8 +42,8 @@ namespace TodoApplication.ViewModels.Dialogs
 
         public ObservableCollection<TagColor> AvailableColors { get; }
 
-        public ActionCommand AddTagCommand { get; }
-        public ActionCommand RemoveTagCommand { get; }
+        public AsyncCommand AddTagCommand { get; }
+        public AsyncCommand RemoveTagCommand { get; }
 
 
         public ManageTagsDialogViewModel(
@@ -52,8 +54,8 @@ namespace TodoApplication.ViewModels.Dialogs
             Tags = tags;
             _referencedTagIds = referencedTagIds;
             _tagRepository = tagRepository;
-            AddTagCommand = new ActionCommand(AddTag, CanAddTag);
-            RemoveTagCommand = new ActionCommand(RemoveTag, CanRemoveTag);
+            AddTagCommand = new AsyncCommand(AddTag, CanAddTag);
+            RemoveTagCommand = new AsyncCommand(RemoveTag, CanRemoveTag);
 
             AvailableColors = new ObservableCollection<TagColor>
             {
@@ -75,11 +77,11 @@ namespace TodoApplication.ViewModels.Dialogs
             return !_referencedTagIds.Contains(tag.Id);
         }
 
-        private void RemoveTag()
+        private async Task RemoveTag()
         {
             if(SelectedTag != null)
             {
-                _tagRepository.Remove(SelectedTag.Id);
+                await _tagRepository.Remove(SelectedTag.Id);
                 Tags.Remove(SelectedTag);
             }
         }
@@ -89,7 +91,7 @@ namespace TodoApplication.ViewModels.Dialogs
             return !String.IsNullOrWhiteSpace(TagName);
         }
 
-        private void AddTag()
+        private async Task AddTag()
         {
             if (!String.IsNullOrEmpty(TagName))
             {
@@ -99,7 +101,8 @@ namespace TodoApplication.ViewModels.Dialogs
                     Name = TagName,
                 };
                 Tags.Add(new TagViewModel(tagModel, _tagRepository));
-                _tagRepository.Add(tagModel);
+            
+                await _tagRepository.Add(tagModel);
             }
         }
     }

@@ -4,6 +4,7 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TodoApplication.Models;
 using TodoApplication.Respositories;
 using TodoApplication.Services;
@@ -148,7 +149,7 @@ namespace TodoApplication.UnitTest.ViewModels
             todoRepoMock.Setup(repo => repo.GetAll()).Returns(new List<TodoItem>());
 
             var tagRepoMock = new Mock<ITagRepository>();
-            tagRepoMock.Setup(repo => repo.GetAll()).Returns(new List<TodoItemTag>());
+            tagRepoMock.Setup(repo => repo.GetAll()).Returns(Task.FromResult(new List<TodoItemTag>()));
 
             return new MainWindowViewModel(
                 todoRepoMock.Object,

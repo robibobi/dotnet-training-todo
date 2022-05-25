@@ -1,9 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using TodoApplication.Models;
 using TodoApplication.Properties;
 using TodoApplication.Respositories;
+using TodoApplication.Util;
 
 namespace TodoApplication.ViewModels
 {
@@ -22,14 +23,22 @@ namespace TodoApplication.ViewModels
             set 
             { 
                 _name = value;
-                if (ValidateName())
-                {
-                    _tagRepository.Update(CreateModel());
-                }
+                UpdateIfValidName();
             }
         }
 
-        private bool ValidateName()
+        private void UpdateIfValidName()
+        {
+            AsyncVoidHelper.TryThrowOnDispatcher(async () =>
+            {
+                if (await ValidateName())
+                {
+                    await _tagRepository.Update(CreateModel());
+                }
+            });
+        }
+
+        private async Task<bool> ValidateName()
         {
             // Validate that name is not empty
             if (String.IsNullOrWhiteSpace(Name))
@@ -38,7 +47,7 @@ namespace TodoApplication.ViewModels
                 return false;
             }
             // Validate that name is unique
-            else if(NameIsNotUnique())
+            else if(await NameIsNotUnique())
             {
                 SetError(nameof(Name), Resources.TagNotUniqueError);
                 return false;
@@ -49,10 +58,10 @@ namespace TodoApplication.ViewModels
             }
         }
 
-        private bool NameIsNotUnique()
+        private async Task<bool> NameIsNotUnique()
         {
-            var otherTagNames = _tagRepository
-                .GetAll()
+            var otherTagNames = (await _tagRepository
+                .GetAll())
                 .Where(tag => tag.Id != this.Id)
                 .Select(tag => tag.Name);
 

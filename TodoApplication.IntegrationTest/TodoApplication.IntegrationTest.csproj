@@ -98,7 +98,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Repositories\TagItemRepositoryTest\Data\GetAllTestFile.json" />
+    <None Include="Repositories\TagItemRepositoryTest\Data\GetAllTestFile.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Repositories\TodoItemRepositoryTest\Data\EmptyTestFile.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

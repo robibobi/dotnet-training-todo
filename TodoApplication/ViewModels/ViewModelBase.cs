@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace TodoApplication.ViewModels
@@ -16,6 +17,12 @@ namespace TodoApplication.ViewModels
         {
             return (bool)(DesignerProperties.IsInDesignModeProperty
                 .GetMetadata(typeof(DependencyObject)).DefaultValue);
+        }
+
+
+        public virtual Task OnAttachedAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }

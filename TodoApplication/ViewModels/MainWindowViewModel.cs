@@ -43,9 +43,9 @@ namespace TodoApplication.ViewModels
         public ActionCommand AddTagCommand { get; }
         public ActionCommand ShowManageTagsDialogCommand { get; }
 
-        public ObservableCollection<TodoItemViewModel> TodoItems { get; }
+        public ObservableCollection<TodoItemViewModel> TodoItems { get; private set; }
 
-        public ObservableCollection<TagViewModel> AvailableTags { get; }
+        public ObservableCollection<TagViewModel> AvailableTags { get; private set; }
 
         public TagViewModel SelectedTag
         {
@@ -79,21 +79,27 @@ namespace TodoApplication.ViewModels
 
             AddTodoCommand = new ActionCommand(AddTodo, CanAddTodo);
             RemoveTodoCommand = new ActionCommand<TodoItemViewModel>(RemoveTodo, CanRemoveTodo);
-            ShowManageTagsDialogCommand = new ActionCommand(ShowManageTagsDialog, () => true );
+            ShowManageTagsDialogCommand = new ActionCommand(ShowManageTagsDialog, () => true);
+            AddTagCommand = new ActionCommand(AddTagToSelectedTodoItem, CanAddTag);
 
+        }
+
+        public override async Task OnAttachedAsync()
+        {
             AvailableTags = new ObservableCollection<TagViewModel>();
-            foreach(var tag in _tagRepository.GetAll())
+            var tags = await _tagRepository.GetAll();
+            foreach (var tag in tags)
             {
                 AvailableTags.Add(new TagViewModel(tag, _tagRepository));
             }
+            RaisePropertyChanged(nameof(AvailableTags));
 
             TodoItems = new ObservableCollection<TodoItemViewModel>();
-            foreach(var item in _todoRepository.GetAll())
+            foreach (var item in _todoRepository.GetAll())
             {
                 TodoItems.Add(CreateViewModelFromTodoItem(item));
             }
-
-            AddTagCommand = new ActionCommand(AddTagToSelectedTodoItem, CanAddTag);
+            RaisePropertyChanged(nameof(TodoItems));
         }
 
         private void ShowManageTagsDialog()

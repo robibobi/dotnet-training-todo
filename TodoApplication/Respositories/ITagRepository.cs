@@ -9,12 +9,9 @@ namespace TodoApplication.Respositories
 {
     internal interface ITagRepository
     {
-        List<TodoItemTag> GetAll();
-
-        void Add(TodoItemTag tag);
-
-        void Remove(Guid tagId);
-
-        void Update(TodoItemTag tag);
+        Task<List<TodoItemTag>> GetAll();
+        Task Add(TodoItemTag tag);
+        Task Remove(Guid tagId);
+        Task Update(TodoItemTag tag);
     }
 }

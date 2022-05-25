@@ -1,20 +1,34 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Shouldly;
+using System.Threading.Tasks;
 using TodoApplication.Respositories;
 using TodoApplication.Services;
 
 namespace TodoApplication.IntegrationTest.Repositories.TagItemRepositoryTest
 {
+
     [TestClass]
     public class TagRepositoryTests : IntegrationTestBase
     {
+        public TagRepositoryTests() : base("Repositories", "TagItemRepositoryTest", "Data")
+        {
+        }
+
+
         [TestMethod]
-        public void GetAll_FileHas3TagEntries_3TagsAreReturned()
+        public async Task GetAll_FileHas3TagEntries_3TagsAreReturned()
         {
             // Arrange
+            var testFile = CopyFileToTestDir("GetAllTestFile.json");
+            var sut = CreateSut(testFile.FullName);
             // Act
+            var tags = await sut.GetAll();
             // Assert
+            tags.Count.ShouldBe(3);
         }
+
+        // ... 
 
 
 
