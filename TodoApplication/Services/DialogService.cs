@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -29,16 +30,9 @@ namespace TodoApplication.Services
             SetDialogHostContent(manageTagsDialog);
         }
 
-        public static void CloseDialog()
-        {
-            SetDialogHostContent(null);
-        }
-
         private static void SetDialogHostContent(object content)
         {
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-
-            mainWindow.DialogHost.Content = content;
+            DialogHost.Show(content);
         }
     }
 }

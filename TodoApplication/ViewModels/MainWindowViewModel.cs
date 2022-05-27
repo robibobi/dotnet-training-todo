@@ -38,7 +38,7 @@ namespace TodoApplication.ViewModels
         }
 
         public ActionCommand AddTodoCommand { get; }
-        public ActionCommand<TodoItemViewModel> RemoveTodoCommand { get; }
+        public AsyncCommand<TodoItemViewModel> RemoveTodoCommand { get; }
 
         public ActionCommand AddTagCommand { get; }
         public ActionCommand ShowManageTagsDialogCommand { get; }
@@ -78,7 +78,7 @@ namespace TodoApplication.ViewModels
             _dialogService = dialogService;
 
             AddTodoCommand = new ActionCommand(AddTodo, CanAddTodo);
-            RemoveTodoCommand = new ActionCommand<TodoItemViewModel>(RemoveTodo, CanRemoveTodo);
+            RemoveTodoCommand = new AsyncCommand<TodoItemViewModel>(RemoveTodo, CanRemoveTodo);
             ShowManageTagsDialogCommand = new ActionCommand(ShowManageTagsDialog, () => true);
             AddTagCommand = new ActionCommand(AddTagToSelectedTodoItem, CanAddTag);
 
@@ -149,13 +149,14 @@ namespace TodoApplication.ViewModels
             return !String.IsNullOrEmpty(TodoName);
         }
 
-        private void RemoveTodo(TodoItemViewModel vmToRemove)
+        private Task RemoveTodo(TodoItemViewModel vmToRemove)
         {
             if (vmToRemove != null)
             {
                 TodoItems.Remove(vmToRemove);
                 _todoRepository.Remove(vmToRemove.Id);
             }
+            return Task.CompletedTask;
         }
 
         private bool CanRemoveTodo(TodoItemViewModel vmToRemove)

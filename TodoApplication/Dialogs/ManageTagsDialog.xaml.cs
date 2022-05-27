@@ -25,10 +25,5 @@ namespace TodoApplication.Dialogs
         {
             InitializeComponent();
         }
-
-        private void CloseDialogButton_Click(object sender, RoutedEventArgs e)
-        {
-            DialogService.CloseDialog();
-        }
     }
 }

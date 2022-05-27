@@ -4,16 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:rules="clr-namespace:TodoApplication.Validation.Rules"
+             xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              FontSize="16"
              Height="350"
              Width="600">
     <Border>
-        <Border.Effect>
-            <DropShadowEffect Color="Gray"
-                              ShadowDepth="2" />
-        </Border.Effect>
-        <Grid Background="White">
+      
+        <Grid >
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
@@ -22,9 +20,9 @@
 
             <!--  Header  -->
             <TextBlock Text="Manage Tags"
-                       FontSize="16"
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                        Margin="16" />
-            <Rectangle Fill="DarkGray"
+            <Rectangle Fill="{StaticResource MaterialDesignDarkSeparatorBackground}"
                        Height="1"
                        VerticalAlignment="Bottom" />
 
@@ -42,20 +40,23 @@
                         <!--  TextBox  -->
                         <ColumnDefinition Width="2*" />
                         <!--  Add Button  -->
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
                         <!--  Remove Button  -->
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0"
+                             mat:HintAssist.Hint="Enter a new todo name."
                              Text="{Binding TagName,
                                             Mode=TwoWay,
                                             UpdateSourceTrigger=PropertyChanged}" />
                     <Button Grid.Column="1"
-                            Content="Add Tag"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Content="{mat:PackIcon Kind=Plus}"
                             Command="{Binding AddTagCommand}" />
                     <Button Grid.Column="2"
+                            Style="{StaticResource MaterialDesignFlatButton}"
                             Command="{Binding RemoveTagCommand}"
-                            Content="Remove Tag" />
+                            Content="{mat:PackIcon Kind=Delete}" />
 
                 </Grid>
 
@@ -144,8 +145,9 @@
             <StackPanel Grid.Row="2"
                         HorizontalAlignment="Right">
                 <Button x:Name="CloseDialogButton"
-                        Content="Close"
-                        Click="CloseDialogButton_Click"
+                        Content="CLOSE"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Command="{x:Static mat:DialogHost.CloseDialogCommand}"
                         Margin="8"
                         Width="120" />
             </StackPanel>

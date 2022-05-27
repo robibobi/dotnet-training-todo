@@ -38,4 +38,30 @@ namespace TodoApplication.Commands
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
+
+
+    public class AsyncCommand<T> : ICommand where T : class
+    {
+        private readonly Func<T, Task> _execute;
+        private readonly Func<T, bool> _canExceute;
+
+        public AsyncCommand(Func<T, Task> execute, Func<T, bool> canExceute)
+        {
+            _execute = execute;
+            _canExceute = canExceute;
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public bool CanExecute(object parameter)
+        {
+            return _canExceute(parameter as T);
+        }
+
+        public void Execute(object parameter)
+        {
+            AsyncVoidHelper.TryThrowOnDispatcher(() => _execute(parameter as T));
+        }
+    }
+
 }

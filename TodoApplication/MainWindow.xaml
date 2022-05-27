@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:TodoApplication"
         xmlns:vm="clr-namespace:TodoApplication.ViewModels"
         xmlns:usercontrols="clr-namespace:TodoApplication.UserControls"
@@ -11,6 +12,7 @@
         xmlns:me="clr-namespace:TodoApplication.MarkupExtensions"
         xmlns:b="clr-namespace:TodoApplication.Behaviors"
         xmlns:p="clr-namespace:TodoApplication.Properties"
+        Foreground="{StaticResource MaterialDesignBody}"
         mc:Ignorable="d"
         Title="HMI Todo Management"
         Height="500"
@@ -28,8 +30,9 @@
         <StackPanel Margin="32">
 
             <!--  Header  -->
-            <TextBlock FontSize="22"
+            <TextBlock 
                        Margin="0,0,0,16"
+                       Style="{StaticResource MaterialDesignHeadline4TextBlock}"
                        Text="{x:Static p:Resources.AppTitle}" />
 
             <!--  TextBox + Add Button  -->
@@ -46,10 +49,17 @@
                 <Button x:Name="AddTodoButton"
                         properties:ExampleProperties.SetBackgroundColorWhenEmpty="True"
                         Margin="16,0,0,0"
+                                      Padding="8, 4, 8, 4"
                         Command="{Binding AddTodoCommand}"
-                        Style="{StaticResource MaterialDesignButton}"
-                        VerticalAlignment="Center"
-                        Content="Add Todo Item" />
+                        VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" >
+                        <mat:PackIcon Kind="Plus"
+                                      Margin="0, 0, 6, 0"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Text="Add Todo" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                        
 
                 <ComboBox Width="180"
                           Margin="64,0,16,0"
@@ -67,14 +77,12 @@
                 </ComboBox>
 
                 <Button x:Name="AddTagButton"
-                        Style="{StaticResource MaterialDesignButton}"
                         Command="{Binding AddTagCommand}"
                         Content="Add Tag" />
 
                 <Button x:Name="ManageTagButton"
                         Margin="18,0,0,0"
                         Command="{Binding ShowManageTagsDialogCommand}"
-                        Style="{StaticResource MaterialDesignButton}"
                         Content="Manage Tags" />
 
             </StackPanel>
@@ -88,7 +96,6 @@
                      b:ScrollViewerHelper.AutoScroll="True"
                      SelectedItem="{Binding SelectedTodoItem,
                                             Mode=TwoWay}"
-                     Background="{StaticResource TodoListBackground}"
                      ItemsSource="{Binding TodoItems}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="vm:TodoItemViewModel">
@@ -127,8 +134,9 @@
                                                             Converter={StaticResource BoolToVisibilityConverter}}"
                                        Fill="Black" />
 
-                            <Button Content="Delete"
+                            <Button Content="{mat:PackIcon Kind=Delete}"
                                     Grid.Column="3"
+                                    Style="{StaticResource MaterialDesignFlatButton}"
                                     CommandParameter="{Binding Path=.}"
                                     Command="{Binding DataContext.RemoveTodoCommand,
                                                       RelativeSource={RelativeSource Mode=FindAncestor,
@@ -167,6 +175,8 @@
             <!--</ScrollViewer>-->
 
         </StackPanel>
-        <ContentControl x:Name="DialogHost" />
+
+        <mat:DialogHost x:Name="DialogHost" />
+
     </Grid>
 </Window>
