@@ -1,13 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using TodoApplication.Models;
 using TodoApplication.Services;
+using TodoApplication.Util;
 
 namespace TodoApplication.Respositories
 {
@@ -20,45 +18,79 @@ namespace TodoApplication.Respositories
             _configService = configService;
         }
 
-        public async Task Add(TodoItemTag tag)
+        public async Task<Result<Unit>> Add(TodoItemTag tag)
         {
-            var tags = await GetAll();
-            tags.Add(tag);
-            await SaveItems(tags);
+            var tagsResult = await GetAll();
+            if (tagsResult.WasSuccessful)
+            {
+                var tags = tagsResult.Value;
+                tags.Add(tag);
+                await SaveItems(tags);
+                return Result.CreateSuccess();
+            } else
+            {
+                return tagsResult.Map(_ => Unit.Default);
+            }
         }
 
-        public async Task<List<TodoItemTag>> GetAll()
+        public async Task<Result<List<TodoItemTag>>> GetAll()
         {
             var tagFile = _configService.TagItemFile;
 
             if (tagFile.Exists)
             {
-                var tagItemsString = await ReadFileAsync(tagFile.FullName);
-                return JsonConvert
-                    .DeserializeObject<List<TodoItemTag>>(tagItemsString);
+                try
+                {
+
+                    var tagItemsString = await FileHelper.ReadFileAsync(tagFile.FullName);
+                    var tagList = JsonConvert
+                        .DeserializeObject<List<TodoItemTag>>(tagItemsString);
+
+                    return Result.CreateSuccess(tagList);
+                } catch (Exception ex)
+                {
+                    return new Error<List<TodoItemTag>>($"Failed to load tag list from file: {ex.Message}");
+                }
             }
             else
             {
-                return new List<TodoItemTag>();
+                return Result.CreateSuccess(new List<TodoItemTag>());
             }
         }
 
-        public async Task Remove(Guid tagId)
+        public async Task<Result<Unit>> Remove(Guid tagId)
         {
-            var tags = await GetAll();
-            var tagToRemove = tags.First(tag => tag.Id == tagId);
-            tags.Remove(tagToRemove);
-            await SaveItems(tags);
+            var tagsResult = await GetAll();
+            if (tagsResult.WasSuccessful)
+            {
+                var tags = tagsResult.Value;
+                var tagToRemove = tags.First(tag => tag.Id == tagId);
+                tags.Remove(tagToRemove);
+                await SaveItems(tags);
+                return Result.CreateSuccess();
+            } else
+            {
+                return tagsResult.Map(_ => Unit.Default);
+            }
         }
 
-        public async Task Update(TodoItemTag tag)
+        public async Task<Result<Unit>> Update(TodoItemTag tag)
         {
             // Find the tag  to update
-            var tags = await GetAll();
-            var tagToUpdate = tags.Single(t => t.Id == tag.Id);
-            tagToUpdate.Name = tag.Name;
-            tagToUpdate.Color = tag.Color;
-            await SaveItems(tags);
+            var tagsResult = await GetAll();
+            if (tagsResult.WasSuccessful)
+            {
+                var tags = tagsResult.Value;
+                var tagToUpdate = tags.Single(t => t.Id == tag.Id);
+                tagToUpdate.Name = tag.Name;
+                tagToUpdate.Color = tag.Color;
+                await SaveItems(tags);
+                return Result.CreateSuccess();
+            } else
+            {
+                return tagsResult.Map(_ => Unit.Default);
+            }
+
         }
 
         private async Task SaveItems(List<TodoItemTag> items)
@@ -72,27 +104,7 @@ namespace TodoApplication.Respositories
             var tagItemsString = JsonConvert
                 .SerializeObject(items, Formatting.Indented);
 
-            await WriteFileAsync(tagFile.FullName, tagItemsString);
-        }
-
-
-        private async Task<string> ReadFileAsync(string fileName)
-        {
-            using(var streamReader = new StreamReader(File.OpenRead(fileName)))
-            {
-                return await streamReader.ReadToEndAsync();
-            }
-        }
-
-        private async Task WriteFileAsync(string fileName, string content)
-        {
-            using(var memStream = new MemoryStream(Encoding.UTF8.GetBytes(content)))
-            {
-                using (var fileStream = File.Open(fileName, FileMode.Create))
-                {
-                    await memStream.CopyToAsync(fileStream);
-                }
-            }
+            await FileHelper.WriteFileAsync(tagFile.FullName, tagItemsString);
         }
     }
 }

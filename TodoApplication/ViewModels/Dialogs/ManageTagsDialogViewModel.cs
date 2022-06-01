@@ -102,6 +102,7 @@ namespace TodoApplication.ViewModels.Dialogs
                 };
                 Tags.Add(new TagViewModel(tagModel, _tagRepository));
             
+   
                 await _tagRepository.Add(tagModel);
             }
         }

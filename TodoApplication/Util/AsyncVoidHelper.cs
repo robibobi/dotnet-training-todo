@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,7 +17,8 @@ namespace TodoApplication.Util
                 await func();
             } catch(Exception ex)
             {
-                Application.Current.Dispatcher.Invoke(() => throw ex);
+                var info = ExceptionDispatchInfo.Capture(ex);
+                Application.Current.Dispatcher.Invoke(() => info.Throw());
             }
         }
     }

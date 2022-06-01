@@ -60,8 +60,11 @@ namespace TodoApplication.ViewModels
 
         private async Task<bool> NameIsNotUnique()
         {
-            var otherTagNames = (await _tagRepository
-                .GetAll())
+            var tagsResult = (await _tagRepository
+                .GetAll());
+            if (!tagsResult.WasSuccessful)
+                return true; // TODO: Show Error dialog
+            var otherTagNames = tagsResult.Value
                 .Where(tag => tag.Id != this.Id)
                 .Select(tag => tag.Name);
 

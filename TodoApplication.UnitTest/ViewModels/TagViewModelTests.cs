@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TodoApplication.Models;
 using TodoApplication.Properties;
 using TodoApplication.Respositories;
+using TodoApplication.Util;
 using TodoApplication.ViewModels;
 
 namespace TodoApplication.UnitTest.ViewModels
@@ -47,10 +48,10 @@ namespace TodoApplication.UnitTest.ViewModels
         public void SetTagName_NameIsNotUnique_NamePropertyHasError()
         {
             // Arrange
-            var existingTags = new List<TodoItemTag>
+            var existingTags = Result.CreateSuccess(new List<TodoItemTag>()
             {
                 CreateTag("I already exist"),
-            };
+            });
             var tagRepositoryMock = new Mock<ITagRepository>();
             tagRepositoryMock.Setup(repo => repo.GetAll()).Returns(Task.FromResult(existingTags));
 

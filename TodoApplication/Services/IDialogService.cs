@@ -8,5 +8,7 @@ namespace TodoApplication.Services
     internal interface IDialogService
     {
         void ShowManageTagsDialog(ObservableCollection<TagViewModel> tags, IEnumerable<Guid> referencedIds);
+    
+        void ShowErrorDailog(string message);
     }
 }

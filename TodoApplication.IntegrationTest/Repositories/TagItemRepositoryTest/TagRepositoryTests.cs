@@ -23,9 +23,9 @@ namespace TodoApplication.IntegrationTest.Repositories.TagItemRepositoryTest
             var testFile = CopyFileToTestDir("GetAllTestFile.json");
             var sut = CreateSut(testFile.FullName);
             // Act
-            var tags = await sut.GetAll();
+            var tagsResult = await sut.GetAll();
             // Assert
-            tags.Count.ShouldBe(3);
+            tagsResult.Value.Count.ShouldBe(3);
         }
 
         // ... 

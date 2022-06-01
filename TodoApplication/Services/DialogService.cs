@@ -30,9 +30,19 @@ namespace TodoApplication.Services
             SetDialogHostContent(manageTagsDialog);
         }
 
+        public void ShowErrorDailog(string message)
+        {
+            var errorDialog = new ErrorDialog();
+
+            errorDialog.DataContext = message;
+
+            SetDialogHostContent(errorDialog);
+        }
+
         private static void SetDialogHostContent(object content)
         {
             DialogHost.Show(content);
         }
+
     }
 }

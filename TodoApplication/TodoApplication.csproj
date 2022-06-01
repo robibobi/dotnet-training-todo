@@ -101,6 +101,9 @@
     <Compile Include="Converters\StringToUpperConverter.cs" />
     <Compile Include="Converters\TagColorConverter.cs" />
     <Compile Include="CustomControls\TodoItemTag.cs" />
+    <Compile Include="Dialogs\ErrorDialog.xaml.cs">
+      <DependentUpon>ErrorDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ManageTagsDialog.xaml.cs">
       <DependentUpon>ManageTagsDialog.xaml</DependentUpon>
     </Compile>
@@ -131,6 +134,10 @@
       <DependentUpon>TodoItemTag.xaml</DependentUpon>
     </Compile>
     <Compile Include="Util\AsyncVoidHelper.cs" />
+    <Compile Include="Util\FileHelper.cs" />
+    <Compile Include="Util\Result.cs" />
+    <Compile Include="Util\ResultExtensions.cs" />
+    <Compile Include="Util\Unit.cs" />
     <Compile Include="Validation\Rules\NotEmptyValidationRule.cs" />
     <Compile Include="ViewModels\Dialogs\ManageTagsDialogViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -138,6 +145,10 @@
     <Compile Include="ViewModels\TodoItemViewModel.cs" />
     <Compile Include="ViewModels\ValidationViewModelBase.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Page Include="Dialogs\ErrorDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\ManageTagsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

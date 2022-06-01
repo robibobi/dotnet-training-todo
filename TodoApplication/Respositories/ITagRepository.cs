@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TodoApplication.Models;
+using TodoApplication.Util;
 
 namespace TodoApplication.Respositories
 {
     internal interface ITagRepository
     {
-        Task<List<TodoItemTag>> GetAll();
-        Task Add(TodoItemTag tag);
-        Task Remove(Guid tagId);
-        Task Update(TodoItemTag tag);
+        Task<Result<List<TodoItemTag>>> GetAll();
+        Task<Result<Unit>> Add(TodoItemTag tag);
+        Task<Result<Unit>> Remove(Guid tagId);
+        Task<Result<Unit>> Update(TodoItemTag tag);
     }
 }

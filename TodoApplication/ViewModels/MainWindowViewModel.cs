@@ -1,14 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
 using TodoApplication.Commands;
 using TodoApplication.Models;
 using TodoApplication.Respositories;
@@ -87,8 +80,15 @@ namespace TodoApplication.ViewModels
         public override async Task OnAttachedAsync()
         {
             AvailableTags = new ObservableCollection<TagViewModel>();
-            var tags = await _tagRepository.GetAll();
-            foreach (var tag in tags)
+            var tagsResult = await _tagRepository.GetAll();
+            if (!tagsResult.WasSuccessful)
+            {
+                _dialogService.ShowErrorDailog(tagsResult.Message);
+                // TODO log the error.
+                return;
+            }
+
+            foreach (var tag in tagsResult.Value)
             {
                 AvailableTags.Add(new TagViewModel(tag, _tagRepository));
             }

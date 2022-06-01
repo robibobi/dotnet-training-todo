@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="TodoApplication.Dialogs.ErrorDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:rules="clr-namespace:TodoApplication.Validation.Rules"
+             xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:e="clr-namespace:TodoApplication.MarkupExtensions"
+             mc:Ignorable="d"
+             d:DataContext="{e:PlaceholderText}"
+             FontSize="16"
+             Height="350"
+             Width="600">
+    <Border>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <!--  Header  -->
+            <TextBlock Text="Error"
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                       Margin="16" />
+            <Rectangle Fill="{StaticResource MaterialDesignDarkSeparatorBackground}"
+                       Height="1"
+                       VerticalAlignment="Bottom" />
+
+            <!--  Content  -->
+            <Grid Grid.Row="1"
+                  Margin="32">
+
+                <Grid.ColumnDefinitions>
+                    <!--  Icon  -->
+                    <ColumnDefinition Width="auto" />
+                    <!--  Error text  -->
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <mat:PackIcon Kind="Error"
+                              Width="32"
+                              Height="32"
+                              Foreground="Red" />
+
+                <TextBlock Margin="8,0,0,0"
+                           TextWrapping="Wrap"
+                           Grid.Column="1"
+                           Text="{Binding}" />
+            </Grid>
+
+
+            <!--  Buttons  -->
+            <StackPanel Grid.Row="2"
+                        HorizontalAlignment="Right">
+                <Button x:Name="CloseDialogButton"
+                        Content="CLOSE"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Command="{x:Static mat:DialogHost.CloseDialogCommand}"
+                        Margin="8"
+                        Width="120" />
+            </StackPanel>
+
+
+        </Grid>
+    </Border>
+</UserControl>
