@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Shouldly;
+using System;
 using System.Threading.Tasks;
 using TodoApplication.Respositories;
 using TodoApplication.Services;
@@ -28,7 +29,20 @@ namespace TodoApplication.IntegrationTest.Repositories.TagItemRepositoryTest
             tagsResult.Value.Count.ShouldBe(3);
         }
 
-        // ... 
+
+        [TestMethod]
+        public async Task RemoveTag_TagWithGivenIdDoesNotExist_ReturnsError()
+        {
+            // Arrage
+            var testFile = CopyFileToTestDir("GetAllTestFile.json");
+            var tagRepo = CreateSut(testFile.FullName);
+            var tagIdThatDoesNotExist = Guid.Empty;
+            // Act
+            var removeResult = await tagRepo.Remove(tagIdThatDoesNotExist);
+
+            // Assert
+            removeResult.WasSuccessful.ShouldBeFalse();
+        }
 
 
 

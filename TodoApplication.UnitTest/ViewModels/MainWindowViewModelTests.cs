@@ -155,8 +155,7 @@ namespace TodoApplication.UnitTest.ViewModels
             return new MainWindowViewModel(
                 todoRepoMock.Object,
                 tagRepoMock.Object,
-                Mock.Of<IDialogService>(),
-                null);
+                Mock.Of<IDialogService>());
         }
 
         private TodoItemViewModel CreateTodoItemViewModel(string name)

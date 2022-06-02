@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TodoApplication.Util
 {
@@ -17,7 +13,7 @@ namespace TodoApplication.Util
                 return Result.CreateSuccess(mapperFunction(result.Value));
             } else
             {
-                return new Error<TResult>(result.Message);
+                return Result.CreateError<TResult>(result.Message);
             }
         }
     }

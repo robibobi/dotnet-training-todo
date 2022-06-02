@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace TodoApplication.ViewModels
 
     internal class MainWindowViewModel : ViewModelBase
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(MainWindowViewModel));
+
         private readonly ITodoItemRepository _todoRepository;
         private readonly ITagRepository _tagRepository;
         private readonly IDialogService _dialogService;
@@ -63,8 +66,7 @@ namespace TodoApplication.ViewModels
         public MainWindowViewModel(
             ITodoItemRepository repository,
             ITagRepository tagRespository,
-            IDialogService dialogService,
-            ILoggingService loggingService)
+            IDialogService dialogService)
         {
             _todoRepository = repository;
             _tagRepository = tagRespository;
@@ -79,12 +81,14 @@ namespace TodoApplication.ViewModels
 
         public override async Task OnAttachedAsync()
         {
+            Log.Debug("Attaching main window viemodel...");
+
             AvailableTags = new ObservableCollection<TagViewModel>();
             var tagsResult = await _tagRepository.GetAll();
             if (!tagsResult.WasSuccessful)
             {
                 _dialogService.ShowErrorDailog(tagsResult.Message);
-                // TODO log the error.
+                Log.Error(tagsResult.Message);
                 return;
             }
 

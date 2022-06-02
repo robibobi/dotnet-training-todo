@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using log4net;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TodoApplication.Models;
@@ -11,6 +13,8 @@ namespace TodoApplication.Respositories
 {
     internal class TagRepository : ITagRepository
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(TagRepository));
+
         private readonly IAppConfigService _configService;
 
         public TagRepository(IAppConfigService configService)
@@ -25,8 +29,7 @@ namespace TodoApplication.Respositories
             {
                 var tags = tagsResult.Value;
                 tags.Add(tag);
-                await SaveItems(tags);
-                return Result.CreateSuccess();
+                return await SaveItems(tags);
             } else
             {
                 return tagsResult.Map(_ => Unit.Default);
@@ -35,18 +38,18 @@ namespace TodoApplication.Respositories
 
         public async Task<Result<List<TodoItemTag>>> GetAll()
         {
+            Log.Info("Reading all tags from the tag file...");
+
             var tagFile = _configService.TagItemFile;
 
             if (tagFile.Exists)
             {
                 try
                 {
+                    var tagItemsStringResult = await FileHelper.ReadFileAsync(tagFile.FullName);
+   
+                    return tagItemsStringResult.Map(JsonConvert.DeserializeObject<List<TodoItemTag>>);
 
-                    var tagItemsString = await FileHelper.ReadFileAsync(tagFile.FullName);
-                    var tagList = JsonConvert
-                        .DeserializeObject<List<TodoItemTag>>(tagItemsString);
-
-                    return Result.CreateSuccess(tagList);
                 } catch (Exception ex)
                 {
                     return new Error<List<TodoItemTag>>($"Failed to load tag list from file: {ex.Message}");
@@ -64,10 +67,16 @@ namespace TodoApplication.Respositories
             if (tagsResult.WasSuccessful)
             {
                 var tags = tagsResult.Value;
-                var tagToRemove = tags.First(tag => tag.Id == tagId);
+                var tagToRemove = tags.FirstOrDefault(tag => tag.Id == tagId);
+
+                if(tagToRemove == null)
+                {
+                    return Result.CreateError($"A tag with the given id '{tagId}' does not exist.");
+                }
+
                 tags.Remove(tagToRemove);
-                await SaveItems(tags);
-                return Result.CreateSuccess();
+
+                return await SaveItems(tags);
             } else
             {
                 return tagsResult.Map(_ => Unit.Default);
@@ -82,10 +91,10 @@ namespace TodoApplication.Respositories
             {
                 var tags = tagsResult.Value;
                 var tagToUpdate = tags.Single(t => t.Id == tag.Id);
+
                 tagToUpdate.Name = tag.Name;
                 tagToUpdate.Color = tag.Color;
-                await SaveItems(tags);
-                return Result.CreateSuccess();
+                return await SaveItems(tags);
             } else
             {
                 return tagsResult.Map(_ => Unit.Default);
@@ -93,18 +102,29 @@ namespace TodoApplication.Respositories
 
         }
 
-        private async Task SaveItems(List<TodoItemTag> items)
+        private async Task<Result<Unit>> SaveItems(List<TodoItemTag> items)
         {
             var tagFile = _configService.TagItemFile;
-            if (!tagFile.Directory.Exists)
+            try
             {
-                tagFile.Directory.Create();
+                if (!tagFile.Directory.Exists)
+                {
+                    tagFile.Directory.Create();
+                }
+
+                var tagItemsString = JsonConvert
+                    .SerializeObject(items, Formatting.Indented);
+
+                return await FileHelper.WriteFileAsync(tagFile.FullName, tagItemsString);
+            } 
+            catch(JsonSerializationException ex)
+            {
+                return Result.CreateError($"Failed to serialize tag items: {ex.Message}");
             }
-
-            var tagItemsString = JsonConvert
-                .SerializeObject(items, Formatting.Indented);
-
-            await FileHelper.WriteFileAsync(tagFile.FullName, tagItemsString);
+            catch (IOException ex)
+            {
+                return Result.CreateError($"Failed to create tag file directory: {ex.Message}");
+            }
         }
     }
 }

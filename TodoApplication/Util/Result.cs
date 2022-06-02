@@ -48,6 +48,16 @@ namespace TodoApplication.Util
         {
             return UnitSuccess;
         }
+
+        public static Result<T> CreateError<T>(string message)
+        {
+            return new Error<T>(message);
+        }
+
+        public static Result<Unit> CreateError(string message)
+        {
+            return new Error<Unit>(message);
+        }
     }
 
 
