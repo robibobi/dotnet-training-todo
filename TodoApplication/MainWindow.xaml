@@ -17,53 +17,61 @@
         Title="HMI Todo Management"
         Height="500"
         Width="900"
-        DataContext="{me:ViewModelProvider ViewModelType={x:Type vm:MainWindowViewModel}}" >
-
-    <Window.Resources>
-        <Style x:Key="TagNameTextBoxStyle"
-               TargetType="TextBox">
-            <Setter Property="Text" Value="ABC" />
-        </Style>
-    </Window.Resources>
+        DataContext="{me:ViewModelProvider ViewModelType={x:Type vm:MainWindowViewModel}}">
 
     <Grid>
-        <StackPanel Margin="32">
+        <Grid Margin="16">
+
+            <Grid.RowDefinitions>
+                <!--  Header  -->
+                <RowDefinition Height="auto" />
+                <!--  Buttons  -->
+                <RowDefinition Height="auto" />
+                <!--  Search  -->
+                <RowDefinition Height="auto" />
+                <!--  TodoList  -->
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
             <!--  Header  -->
-            <TextBlock 
-                       Margin="0,0,0,16"
+            <TextBlock Margin="0,0,0,16"
+                       Grid.Row="0"
                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
                        Text="{x:Static p:Resources.AppTitle}" />
 
             <!--  TextBox + Add Button  -->
-            <StackPanel Orientation="Horizontal"
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
                         Margin="0,0,0,16">
 
                 <TextBox x:Name="TodoNameTextBox"
-                         Style="{StaticResource TagNameTextBoxStyle}"
                          Width="200"
+                         FontSize="14"
                          VerticalAlignment="Center"
+                         mat:HintAssist.Hint="Todo item name"
                          Text="{Binding TodoName,
                                         UpdateSourceTrigger=PropertyChanged}" />
 
                 <Button x:Name="AddTodoButton"
                         properties:ExampleProperties.SetBackgroundColorWhenEmpty="True"
                         Margin="16,0,0,0"
-                                      Padding="8, 4, 8, 4"
+                        Padding="8,4,8,4"
                         Command="{Binding AddTodoCommand}"
                         VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal" >
+                    <StackPanel Orientation="Horizontal">
                         <mat:PackIcon Kind="Plus"
-                                      Margin="0, 0, 6, 0"
+                                      Margin="0,0,6,0"
                                       VerticalAlignment="Center" />
-                        <TextBlock Text="Add Todo" VerticalAlignment="Center" />
+                        <TextBlock Text="Add Todo"
+                                   VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
-                        
+
 
                 <ComboBox Width="180"
                           Margin="64,0,16,0"
                           VerticalAlignment="Center"
+                          mat:HintAssist.Hint="Select a tag"
                           ItemsSource="{Binding AvailableTags}"
                           SelectedItem="{Binding SelectedTag,
                                                  Mode=TwoWay}">
@@ -87,16 +95,37 @@
 
             </StackPanel>
 
+            <!--  Textsearch  -->
+            <Grid Grid.Row="2"
+                  Width="200"
+                  HorizontalAlignment="Left"
+                  Margin="0,8,0,8">
+
+                <TextBox mat:HintAssist.Hint="{x:Static p:Resources.SearchAsYouTypeHint}"
+                         mat:TextFieldAssist.HasLeadingIcon="True"
+                         mat:TextFieldAssist.LeadingIcon="Search"
+                         Text="{Binding SearchText,
+                                        UpdateSourceTrigger=PropertyChanged}" />
+
+            </Grid>
+
+
             <!--  Todo-List  -->
             <!--<ScrollViewer Height="270"
                           b:ScrollViewerHelper.AutoScroll="True"
                           HorizontalScrollBarVisibility="Disabled" >-->
-            <ListBox Height="270"
-                     x:Name="TodoListBox"
+            <ListBox x:Name="TodoListBox"
+                     Grid.Row="3"
+                     Background="{StaticResource MaterialDesignChipBackground}"
                      b:ScrollViewerHelper.AutoScroll="True"
                      SelectedItem="{Binding SelectedTodoItem,
                                             Mode=TwoWay}"
-                     ItemsSource="{Binding TodoItems}">
+                     ItemsSource="{Binding TodoItemsView}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="vm:TodoItemViewModel">
                         <Grid>
@@ -109,7 +138,8 @@
                                 <ColumnDefinition />
                                 <!--  Tags  -->
                                 <ColumnDefinition />
-                                <ColumnDefinition />
+                                <!--  Delete button  -->
+                                <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
 
                             <CheckBox Grid.Column="0"
@@ -119,35 +149,22 @@
 
                             <TextBlock Margin="16"
                                        Grid.Column="1"
-                                       Text="{Binding Name,
-                                                      StringFormat={}{0} ms}" />
+                                       Text="{Binding Name}" />
                             <TextBlock Margin="16"
                                        Grid.Column="2"
                                        Text="{Binding TimeStamp,
                                                       Converter={StaticResource DateTimeToStringConverter},
                                                       ConverterParameter=HH:mm:ss}" />
 
-                            <Rectangle Height="1"
-                                       Grid.Column="1"
-                                       Grid.ColumnSpan="3"
-                                       Visibility="{Binding IsDone,
-                                                            Converter={StaticResource BoolToVisibilityConverter}}"
-                                       Fill="Black" />
 
-                            <Button Content="{mat:PackIcon Kind=Delete}"
-                                    Grid.Column="3"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
-                                    CommandParameter="{Binding Path=.}"
-                                    Command="{Binding DataContext.RemoveTodoCommand,
-                                                      RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                                     AncestorType=ItemsControl}}" />
+
                             <!--  Tag List  -->
-                            <ItemsControl Grid.Column="4"
+                            <ItemsControl Grid.Column="3"
                                           Margin="16,0,0,0"
                                           ItemsSource="{Binding Tags}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" />
+                                        <WrapPanel />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
@@ -164,17 +181,31 @@
                             </ItemsControl>
 
 
+                            <!--  Remove Button  -->
+                            <Button Content="{mat:PackIcon Kind=Remove}"
+                                    Grid.Column="4"
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    CommandParameter="{Binding Path=.}"
+                                    Command="{Binding DataContext.RemoveTodoCommand,
+                                                      RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                                     AncestorType=ItemsControl}}" />
+
+                            <!--  Completion Mark  -->
+                            <Rectangle Fill="{StaticResource MaterialDesignBody}"
+                                       Visibility="{Binding IsDone,
+                                                            Converter={StaticResource BoolToVisibilityConverter}}"
+                                       VerticalAlignment="Center"
+                                       Height="1"
+                                       Grid.Column="1"
+                                       Grid.ColumnSpan="2" />
 
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-
-            <TextBlock Text="{me:PlaceholderText TextLength=20}"/>
-
             <!--</ScrollViewer>-->
 
-        </StackPanel>
+        </Grid>
 
         <mat:DialogHost x:Name="DialogHost" />
 

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace TodoApplication.Models
 {
-    internal class TodoItem 
+    internal class TodoItem : BaseEntity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public DateTime TimeStamp { get; set; }
         public bool IsDone { get; set; }

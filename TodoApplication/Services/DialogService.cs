@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using TodoApplication.Dialogs;
 using TodoApplication.Respositories;
@@ -37,6 +38,25 @@ namespace TodoApplication.Services
             errorDialog.DataContext = message;
 
             SetDialogHostContent(errorDialog);
+        }
+
+        public async Task<bool> ShowOkCancelDialog(string header, string content)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            var okCancelDialog = new OkCancelDialog();
+            okCancelDialog.HeaderTextBlock.Text = header;
+            okCancelDialog.ContentTextBlock.Text = content;
+
+            okCancelDialog.CancelButton.Click += (s, a) => tcs.SetResult(false);
+            okCancelDialog.OkButton.Click += (s, a) => tcs.SetResult(true);
+
+            SetDialogHostContent(okCancelDialog);
+
+
+            var result = await tcs.Task;
+
+            return result;
         }
 
         private static void SetDialogHostContent(object content)

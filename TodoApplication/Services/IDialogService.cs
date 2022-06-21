@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using TodoApplication.ViewModels;
+using System.Threading.Tasks;
 
 namespace TodoApplication.Services
 {
@@ -10,5 +11,7 @@ namespace TodoApplication.Services
         void ShowManageTagsDialog(ObservableCollection<TagViewModel> tags, IEnumerable<Guid> referencedIds);
     
         void ShowErrorDailog(string message);
+
+        Task<bool> ShowOkCancelDialog(string header, string content);
     }
 }

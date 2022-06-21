@@ -29,6 +29,18 @@ namespace TodoApplication.IntegrationTest.Repositories.TagItemRepositoryTest
             tagsResult.Value.Count.ShouldBe(3);
         }
 
+        [TestMethod]
+        public async Task GetAll_FileIsCorrupted_GetAllReturnsAnError()
+        {
+            // Arrange
+            var testFile = CopyFileToTestDir("Corrupted.json");
+            var sut = CreateSut(testFile.FullName);
+            // Act
+            var tagsResult = await sut.GetAll();
+            // Assert
+            tagsResult.WasSuccessful.ShouldBeFalse();
+        }
+
 
         [TestMethod]
         public async Task RemoveTag_TagWithGivenIdDoesNotExist_ReturnsError()

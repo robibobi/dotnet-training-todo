@@ -1,8 +1,10 @@
 ﻿using log4net;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using TodoApplication.Commands;
 using TodoApplication.Models;
 using TodoApplication.Respositories;
@@ -21,6 +23,7 @@ namespace TodoApplication.ViewModels
         private string _todoName;
         private TagViewModel _selectedTag;
         private TodoItemViewModel _selectedTodoItem;
+        private string _searchText;
 
         public string TodoName
         {
@@ -33,13 +36,15 @@ namespace TodoApplication.ViewModels
             }
         }
 
-        public ActionCommand AddTodoCommand { get; }
+        public AsyncCommand AddTodoCommand { get; }
         public AsyncCommand<TodoItemViewModel> RemoveTodoCommand { get; }
 
-        public ActionCommand AddTagCommand { get; }
+        public AsyncCommand AddTagCommand { get; }
         public ActionCommand ShowManageTagsDialogCommand { get; }
 
         public ObservableCollection<TodoItemViewModel> TodoItems { get; private set; }
+
+        public ICollectionView TodoItemsView { get; private set; }
 
         public ObservableCollection<TagViewModel> AvailableTags { get; private set; }
 
@@ -63,6 +68,14 @@ namespace TodoApplication.ViewModels
             }
         }
 
+
+        public string SearchText
+        {
+            get { return _searchText; }
+            set { _searchText = value; TodoItemsView.Refresh(); }
+        }
+
+
         public MainWindowViewModel(
             ITodoItemRepository repository,
             ITagRepository tagRespository,
@@ -72,11 +85,26 @@ namespace TodoApplication.ViewModels
             _tagRepository = tagRespository;
             _dialogService = dialogService;
 
-            AddTodoCommand = new ActionCommand(AddTodo, CanAddTodo);
+            TodoItems = new ObservableCollection<TodoItemViewModel>();
+            AddTodoCommand = new AsyncCommand(AddTodo, CanAddTodo);
             RemoveTodoCommand = new AsyncCommand<TodoItemViewModel>(RemoveTodo, CanRemoveTodo);
             ShowManageTagsDialogCommand = new ActionCommand(ShowManageTagsDialog, () => true);
-            AddTagCommand = new ActionCommand(AddTagToSelectedTodoItem, CanAddTag);
+            AddTagCommand = new AsyncCommand(AddTagToSelectedTodoItem, CanAddTag);
 
+        }
+
+        private bool FilterTodoItems(object obj)
+        {
+            if (String.IsNullOrWhiteSpace(SearchText))
+            {
+                return true;
+            }
+
+            if(obj is TodoItemViewModel todoItemViewModel)
+            {
+                return todoItemViewModel.Name.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) != -1;
+            }
+            return false;
         }
 
         public override async Task OnAttachedAsync()
@@ -98,8 +126,19 @@ namespace TodoApplication.ViewModels
             }
             RaisePropertyChanged(nameof(AvailableTags));
 
+            var todoItemsResult = await _todoRepository.GetAll();
+            if (!todoItemsResult.WasSuccessful)
+            {
+                _dialogService.ShowErrorDailog(todoItemsResult.Message);
+                Log.Error(todoItemsResult.Message);
+                return;
+            }
+
             TodoItems = new ObservableCollection<TodoItemViewModel>();
-            foreach (var item in _todoRepository.GetAll())
+            TodoItemsView = CollectionViewSource.GetDefaultView(TodoItems);
+            TodoItemsView.Filter = FilterTodoItems;
+            RaisePropertyChanged(nameof(TodoItemsView));
+            foreach (var item in todoItemsResult.Value)
             {
                 TodoItems.Add(CreateViewModelFromTodoItem(item));
             }
@@ -118,21 +157,31 @@ namespace TodoApplication.ViewModels
                 SelectedTag != null;
         }
 
-        private void AddTagToSelectedTodoItem()
+        private async Task AddTagToSelectedTodoItem()
         {
             SelectedTodoItem.Tags.Add(new TagViewModel(SelectedTag.CreateModel(), _tagRepository));
-            _todoRepository.Update(SelectedTodoItem.CreateModel());
+            var updateResult = await _todoRepository.Update(SelectedTodoItem.CreateModel());
+            if (!updateResult.WasSuccessful)
+            {
+                Log.Error(updateResult.Message);
+                _dialogService.ShowErrorDailog($"Failed to add tag to todo item: {updateResult.Message}");
+            }
         }
 
 
-        private void AddTodo()
+        private async Task AddTodo()
         {
             if (!String.IsNullOrEmpty(TodoName))
             {
                 var vm = CreateTodoItemViewModel(TodoName);
                 var model = vm.CreateModel();
                 TodoItems.Add(vm);
-                _todoRepository.Add(model);
+                var addResult = await _todoRepository.Add(model);
+                if (!addResult.WasSuccessful)
+                {
+                    Log.Error(addResult.Message);
+                    _dialogService.ShowErrorDailog("Failed to add todo item: " + addResult.Message);
+                }
                 TodoName = String.Empty;
             }
         }
@@ -153,14 +202,23 @@ namespace TodoApplication.ViewModels
             return !String.IsNullOrEmpty(TodoName);
         }
 
-        private Task RemoveTodo(TodoItemViewModel vmToRemove)
+        private async Task RemoveTodo(TodoItemViewModel vmToRemove)
         {
-            if (vmToRemove != null)
+            var userClickedDelete = await _dialogService.ShowOkCancelDialog(
+                header: Properties.Resources.DeleteTodoConfirmationDialogHeader,
+                content: Properties.Resources.DeleteTodoConfirmationDialogContent);
+
+            if (userClickedDelete && vmToRemove != null)
             {
                 TodoItems.Remove(vmToRemove);
-                _todoRepository.Remove(vmToRemove.Id);
+                var removeResult = await _todoRepository.Remove(vmToRemove.Id);
+                if (!removeResult.WasSuccessful)
+                {
+                    Log.Error(removeResult.Message);
+                    _dialogService.ShowErrorDailog(removeResult.Message);
+                }
             }
-            return Task.CompletedTask;
+
         }
 
         private bool CanRemoveTodo(TodoItemViewModel vmToRemove)

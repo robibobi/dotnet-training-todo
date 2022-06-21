@@ -22,6 +22,8 @@ namespace TodoApplication.UnitTest.ViewModels
         {
             // Arrage
             var tagRepoMock = new Mock<ITagRepository>();
+            tagRepoMock.Setup(r => r.GetAll()).Returns(Task.FromResult(Result.CreateSuccess(new List<TodoItemTag>())));
+
             var testTagItem = CreateTag("Tag 1");
             var tagVm = CreateSut(testTagItem, tagRepoMock.Object);
             // act

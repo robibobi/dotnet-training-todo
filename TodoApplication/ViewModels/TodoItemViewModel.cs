@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,11 +9,14 @@ using System.Windows.Input;
 using TodoApplication.Commands;
 using TodoApplication.Models;
 using TodoApplication.Respositories;
+using TodoApplication.Util;
 
 namespace TodoApplication.ViewModels
 {
     internal class TodoItemViewModel
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(TodoItemViewModel));
+
         private readonly ITodoItemRepository _repository;
 
         public Guid Id { get; }
@@ -21,21 +25,36 @@ namespace TodoApplication.ViewModels
 
         public DateTime TimeStamp { get; set; }
 
-        public bool IsDone { get; set; }
+        private bool _isDone;
+
+        public bool IsDone
+        {
+            get { return _isDone; }
+            set 
+            { 
+                if(_isDone != value)
+                {
+                    _isDone = value;
+                    AsyncVoidHelper.TryThrowOnDispatcher(Update);
+                }
+            }
+        }
+
 
         public ObservableCollection<TagViewModel> Tags { get; set; }
 
-        public ActionCommand<TagViewModel> RemoveTagCommand { get; }
+        public AsyncCommand<TagViewModel> RemoveTagCommand { get; }
 
         public TodoItemViewModel(
             TodoItem todoItem,
             ITodoItemRepository repository) : this(todoItem.Id)
         {
+            _repository = repository;
+
             Name = todoItem.Name;
             TimeStamp = todoItem.TimeStamp;
-            IsDone = todoItem.IsDone;
-            _repository = repository;
-            RemoveTagCommand = new ActionCommand<TagViewModel>(RemoveTag, CanRemoveTag);
+            _isDone = todoItem.IsDone;
+            RemoveTagCommand = new AsyncCommand<TagViewModel>(RemoveTag, CanRemoveTag);
         }
 
         public TodoItemViewModel(Guid id)
@@ -45,10 +64,10 @@ namespace TodoApplication.ViewModels
         }
 
 
-        public void RemoveTag(TagViewModel tagToRemove)
+        public async Task RemoveTag(TagViewModel tagToRemove)
         {
             Tags.Remove(tagToRemove);
-            Update();
+            await Update();
         }
 
 
@@ -64,10 +83,14 @@ namespace TodoApplication.ViewModels
             };
         }
 
-        public void Update()
+        public async Task Update()
         {
             var model = CreateModel();
-            _repository.Update(model);
+            var updateResult = await _repository.Update(model);
+            if (!updateResult.WasSuccessful)
+            {
+                Log.Error(updateResult.Message);
+            }
         }
 
         private bool CanRemoveTag(TagViewModel _)

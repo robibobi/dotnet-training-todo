@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="TodoApplication.Dialogs.OkCancelDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:TodoApplication.Dialogs"
+             xmlns:m="clr-namespace:TodoApplication.MarkupExtensions"
+             xmlns:p="clr-namespace:TodoApplication.Properties"
+             xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="280"
+             d:DesignWidth="400">
+    <Grid Background="{StaticResource MaterialDesignBackground}">
+        <Grid.RowDefinitions>
+            <!--  Header  -->
+            <RowDefinition Height="auto" />
+            <!--  Content  -->
+            <RowDefinition Height="*" />
+            <!--  Buttons  -->
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Header  -->
+        <TextBlock x:Name="HeaderTextBlock"
+                   Margin="16"
+                   Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                   Text="Header TextBlock" />
+
+        <Rectangle Height="1"
+                   Fill="{StaticResource MaterialDesignDarkSeparatorBackground}"
+                   VerticalAlignment="Bottom" />
+
+        <!--  Content  -->
+        <TextBlock x:Name="ContentTextBlock"
+                   Grid.Row="1"
+                   Margin="16"
+                   Text="{m:PlaceholderText}"
+                   TextWrapping="Wrap" />
+
+
+        <!--  Buttons  -->
+        <StackPanel Grid.Row="2"
+                    Margin="0,0,8,8"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button x:Name="CancelButton"
+                    Command="{x:Static mat:DialogHost.CloseDialogCommand}"
+                    Content="{Binding Source={x:Static p:Resources.CancelButtonContent},
+                                      Converter={StaticResource ToUpperConverter}}"
+                    Style="{StaticResource MaterialDesignFlatButton}" />
+            <Button x:Name="OkButton"
+                    Command="{x:Static mat:DialogHost.CloseDialogCommand}"
+                    Content="{Binding Source={x:Static p:Resources.OkButtonContent},
+                                      Converter={StaticResource ToUpperConverter}}"
+                    Style="{StaticResource MaterialDesignFlatButton}" />
+        </StackPanel>
+
+
+
+    </Grid>
+</UserControl>

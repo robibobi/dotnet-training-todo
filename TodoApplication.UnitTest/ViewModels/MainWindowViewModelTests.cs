@@ -147,7 +147,8 @@ namespace TodoApplication.UnitTest.ViewModels
         private MainWindowViewModel CreateSut()
         {
             var todoRepoMock = new Mock<ITodoItemRepository>();
-            todoRepoMock.Setup(repo => repo.GetAll()).Returns(new List<TodoItem>());
+            todoRepoMock.Setup(repo => repo.GetAll()).Returns(Task.FromResult(Result.CreateSuccess(new List<TodoItem>())));
+            todoRepoMock.Setup(repo => repo.Add(It.IsAny<TodoItem>())).Returns(Task.FromResult(Result.CreateSuccess()));
 
             var tagRepoMock = new Mock<ITagRepository>();
             tagRepoMock.Setup(repo => repo.GetAll()).Returns(Task.FromResult(Result.CreateSuccess(new List<TodoItemTag>())));

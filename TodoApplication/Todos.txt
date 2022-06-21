@@ -1,0 +1,29 @@
+﻿This are the Tasks for the next two weeks:
+
+A) Finish the refactoring ✔
+
+1. Make the ITodoItemRepository async as well.
+2. Implement the error handling in the TodoItemRespository (All Methods should return a Result<T>).
+   -> Make sure you log all error in the viewmodel.
+   -> Whenever there is an error: Show an Error-Dialog to the user.
+3. Implement logging in our TodoApplication.
+4. Update all Integration- and Unit-Tests. Cover error handling with tests.
+
+
+B) Implement a OK/Cancel-Dialog on the IDialogService ✔
+
+Show this dialog to the user when the "delete todo" button is clicked.
+If the user clicks "ok" then the todo item should be deleted. When the user clicks the cancel button.
+The item does not get deleted.
+
+
+C) Implement "Search as you type" for the todo-item list. ✔
+
+Create a textfield on top of the todo-items list. When the user enters some text in the textfield, the todo-item list will be filtered. Only todo items that have the entered text in its name or describtion will be shown.
+HINT: Have a look at the ICollectionView.Filter handler.
+
+
+D) Make your Todo-Application look beautiful
+
+Use all the controls and styles and attached properties from the MaterialDesignXaml library. 
+The winner gets free coffee from tobi the next time he is in the office!

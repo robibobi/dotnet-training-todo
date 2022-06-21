@@ -70,6 +70,51 @@ namespace TodoApplication.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string CancelButtonContent {
+            get {
+                return ResourceManager.GetString("CancelButtonContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to remove this todo item?.
+        /// </summary>
+        public static string DeleteTodoConfirmationDialogContent {
+            get {
+                return ResourceManager.GetString("DeleteTodoConfirmationDialogContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Todo-Item.
+        /// </summary>
+        public static string DeleteTodoConfirmationDialogHeader {
+            get {
+                return ResourceManager.GetString("DeleteTodoConfirmationDialogHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string OkButtonContent {
+            get {
+                return ResourceManager.GetString("OkButtonContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search todo items.
+        /// </summary>
+        public static string SearchAsYouTypeHint {
+            get {
+                return ResourceManager.GetString("SearchAsYouTypeHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tag cannot be empty!.
         /// </summary>
         public static string TagEmptyError {

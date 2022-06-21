@@ -112,11 +112,15 @@
     <Compile Include="Dialogs\ManageTagsDialog.xaml.cs">
       <DependentUpon>ManageTagsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\OkCancelDialog.xaml.cs">
+      <DependentUpon>OkCancelDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Exceptions\MissingTemplatePartException.cs" />
     <Compile Include="IoC\IoCContainer.cs" />
     <Compile Include="MarkupExtensions\PlaceholderTextExtension.cs" />
     <Compile Include="MarkupExtensions\TagColorConverterExtension.cs" />
     <Compile Include="MarkupExtensions\ViewModelProviderExtension.cs" />
+    <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\TagColor.cs" />
     <Compile Include="Models\TodoItem.cs" />
     <Compile Include="Models\TodoItemTag.cs" />
@@ -125,6 +129,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.de-DE.resx</DependentUpon>
     </Compile>
+    <Compile Include="Respositories\FileBasedRepository.cs" />
+    <Compile Include="Respositories\IRepository.cs" />
     <Compile Include="Respositories\ITagRepository.cs" />
     <Compile Include="Respositories\ITodoItemRepository.cs" />
     <Compile Include="Respositories\TagRepository.cs" />
@@ -153,6 +159,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\ManageTagsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\OkCancelDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -219,6 +229,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Todos.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

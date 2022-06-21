@@ -120,6 +120,21 @@
   <data name="AppTitle" xml:space="preserve">
     <value>Todo Application</value>
   </data>
+  <data name="CancelButtonContent" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DeleteTodoConfirmationDialogContent" xml:space="preserve">
+    <value>Are you sure you want to remove this todo item?</value>
+  </data>
+  <data name="DeleteTodoConfirmationDialogHeader" xml:space="preserve">
+    <value>Delete Todo-Item</value>
+  </data>
+  <data name="OkButtonContent" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="SearchAsYouTypeHint" xml:space="preserve">
+    <value>Search todo items</value>
+  </data>
   <data name="TagEmptyError" xml:space="preserve">
     <value>Tag cannot be empty!</value>
   </data>
